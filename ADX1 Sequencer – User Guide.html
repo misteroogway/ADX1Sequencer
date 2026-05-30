@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAM ADX1 Sequencer – User Guide</title>
+<style>
+  :root {
+    --bg:     #0e0e0e;
+    --bg2:    #141414;
+    --bg3:    #1e1e1e;
+    --border: #2a2a2a;
+    --dim:    #4a4845;
+    --mid:    #7a7870;
+    --text:   #d4d0c8;
+    --green:  #1d9e75;
+    --amber:  #ef9f27;
+    --purple: #8b5cf6;
+    --red:    #d85a30;
+    --blue:   #378add;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.75;
+    padding-bottom: 80px;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 44px 56px 36px;
+  }
+  .hero h1 { font-size: 20px; letter-spacing: 3px; margin-bottom: 6px; }
+  .hero .sub { font-size: 10px; color: var(--mid); letter-spacing: 2px; margin-bottom: 16px; }
+  .hero p { font-size: 12px; color: var(--mid); max-width: 560px; line-height: 1.8; }
+  .badge { display:inline-block; background:var(--bg3); border:1px solid var(--border);
+           color:var(--dim); font-size:10px; padding:2px 8px; border-radius:3px;
+           margin-right:5px; margin-top:10px; }
+
+  /* Layout */
+  .content { max-width: 880px; margin: 0 auto; padding: 0 56px; }
+  section { margin-top: 48px; }
+  h2 { font-size:10px; font-weight:bold; letter-spacing:2px; color:var(--green);
+       text-transform:uppercase; border-bottom:1px solid var(--border);
+       padding-bottom:7px; margin-bottom:22px; }
+  h3 { font-size:12px; font-weight:bold; color:var(--text); margin:20px 0 7px; }
+  p  { color:var(--mid); margin-bottom:9px; font-size:12px; }
+  ul,ol { padding-left:20px; margin-bottom:11px; }
+  li { color:var(--mid); margin-bottom:4px; font-size:12px; }
+  li strong { color:var(--text); }
+  code { background:var(--bg3); border:1px solid var(--border); color:var(--amber);
+         padding:1px 5px; border-radius:2px; font-size:11px; }
+
+  /* Install boxes */
+  .box { background:var(--bg2); border:1px solid var(--border); border-radius:4px;
+         padding:16px 20px; margin:14px 0; }
+  .box.green  { border-left:3px solid var(--green); }
+  .box.purple { border-left:3px solid var(--purple); }
+  .box.blue   { border-left:3px solid var(--blue); }
+  .box h4 { font-size:11px; color:var(--text); margin-bottom:9px; letter-spacing:1px; }
+  .box .path { font-size:11px; color:var(--amber); background:var(--bg3);
+               padding:5px 10px; border-radius:3px; margin:4px 0; }
+
+  /* Tips / warnings */
+  .tip  { background:#0e1e30; border-left:3px solid var(--blue); padding:9px 13px;
+          border-radius:3px; margin:11px 0; font-size:11px; color:#9bbfd8; }
+  .warn { background:#1e1000; border-left:3px solid var(--amber); padding:9px 13px;
+          border-radius:3px; margin:11px 0; font-size:11px; color:#c8a060; }
+
+  /* Keyboard shortcut table */
+  table { width:100%; border-collapse:collapse; margin:13px 0; }
+  th { font-size:10px; letter-spacing:1px; color:var(--dim); text-align:left;
+       border-bottom:1px solid var(--border); padding:5px 10px; }
+  td { font-size:11px; color:var(--mid); border-bottom:1px solid #1a1a1a; padding:6px 10px; }
+  td:first-child { color:var(--text); font-weight:bold; white-space:nowrap; }
+  tr:hover td { background:#141414; }
+
+  /* UI diagram */
+  .ui { background:var(--bg2); border:1px solid var(--border); border-radius:5px;
+        padding:16px 18px; margin:16px 0; font-size:11px; }
+  .ui-row { display:flex; align-items:center; gap:5px; margin-bottom:5px; flex-wrap:wrap; }
+  .btn { background:#181818; border:1px solid #383838; border-radius:3px;
+         padding:3px 8px; font-size:10px; font-family:'Courier New',monospace; white-space:nowrap; }
+  .btn.g  { background:#0f2e20; border-color:#0f6e56; color:#1d9e75; }
+  .btn.a  { background:#2e1e00; border-color:#7a4a00; color:#ef9f27; }
+  .btn.r  { color:#d85a30; }
+  .btn.b  { background:#0e1e30; border-color:#1a4a7a; color:#378add; }
+  .slider { display:inline-block; height:5px; border-radius:3px; vertical-align:middle;
+            background:linear-gradient(to right,var(--green) 60%,#383838 60%); width:80px; }
+  .slider.a { background:linear-gradient(to right,var(--amber) 30%,#383838 30%); }
+  .slider.p { background:linear-gradient(to right,var(--purple) 50%,#383838 50%); }
+  .hr { border:none; border-top:1px solid var(--border); margin:7px 0; }
+  /* grid demo */
+  .gd { display:flex; align-items:center; gap:3px; margin-bottom:3px; }
+  .lbl { font-size:10px; font-weight:bold; color:#c8c4bc; width:46px; flex-shrink:0; }
+  .step { width:17px; height:17px; border-radius:2px; border:1px solid #252525;
+          background:#1a1a1a; display:inline-block; }
+  .step.on  { background:#1d9e75; border-color:#1d9e75; }
+  .step.alt { background:#111111; }
+  .step.alt.on { background:#1a8f68; }
+  .step.ph { outline:2px solid #fff; outline-offset:-2px; }
+  .step.mute { opacity:.18; }
+  .pill { display:inline-block; border-radius:4px; padding:2px 8px; font-size:10px;
+          font-family:'Courier New',monospace; margin-right:3px; }
+  .pill.g  { background:#0f2e20; color:#1d9e75; border:1px solid #0f6e56; }
+  .pill.b  { background:#0e1e30; color:#378add; border:1px solid #1a4a7a; }
+  .pill.a  { background:#2e1e00; color:#ef9f27; border:1px solid #7a4a00; }
+  .pill.b.cur { box-shadow:0 0 0 1.5px #378add; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>MAM ADX1 SEQUENCER</h1>
+  <div class="sub">STEP SEQUENCER PLUGIN FOR THE MAM ADX1 ANALOGUE DRUM SYNTHESIZER</div>
+  <p>A MIDI step sequencer built specifically for the MAM ADX1. Programs all eight voices with per-step velocity and subdivision, individual lane lengths for polyrhythms, swing, probability, microtiming, pattern banks, chain mode, and a chaos randomizer.</p>
+  <div>
+    <span class="badge">VST3</span>
+    <span class="badge">AU</span>
+    <span class="badge">macOS 11+</span>
+    <span class="badge">Ableton Live</span>
+    <span class="badge">Logic Pro</span>
+    <span class="badge">Any DAW</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ── INSTALLATION ────────────────────────────── -->
+<section>
+<h2>Installation</h2>
+
+<div class="box green">
+  <h4>VST3 — Ableton Live, Bitwig, Reaper, etc.</h4>
+  <p style="font-size:11px;color:var(--mid);margin-bottom:7px;">Copy <strong style="color:var(--text)">ADX1 Sequencer.vst3</strong> to:</p>
+  <div class="path">~/Library/Audio/Plug-Ins/VST3/</div>
+  <p style="font-size:11px;color:var(--mid);margin-top:7px;">Rescan plugins in your DAW after copying.</p>
+</div>
+
+<div class="box purple">
+  <h4>AU — Logic Pro, GarageBand, etc.</h4>
+  <p style="font-size:11px;color:var(--mid);margin-bottom:7px;">Copy <strong style="color:var(--text)">ADX1 Sequencer.component</strong> to:</p>
+  <div class="path">~/Library/Audio/Plug-Ins/Components/</div>
+  <p style="font-size:11px;color:var(--mid);margin-top:7px;">Logic detects it automatically on next launch.</p>
+</div>
+
+<div class="warn">Both files are ad-hoc signed. On first open macOS may block them — go to <strong>System Settings → Privacy &amp; Security</strong> and click <strong>Open Anyway</strong>.</div>
+</section>
+
+
+<!-- ── DAW SETUP ─────────────────────────────────── -->
+<section>
+<h2>DAW Setup</h2>
+
+<h3>Ableton Live (VST3)</h3>
+<ol>
+  <li>Create a <strong>MIDI track</strong></li>
+  <li>Drop <strong>ADX1 Sequencer</strong> into the instrument slot from the VST3 browser</li>
+  <li>Open the plugin UI — find the <strong>MIDI OUT</strong> row near the top</li>
+  <li>Click <strong>↻</strong> to refresh the device list, select your ADX1's MIDI port</li>
+  <li>Press Play in Ableton — the sequencer starts and sends MIDI directly to the ADX1</li>
+</ol>
+<div class="tip">The plugin bypasses Ableton's MIDI routing entirely via the built-in MIDI OUT selector. No second track or MIDI From routing needed.</div>
+
+<h3>Logic Pro (AU)</h3>
+<ol>
+  <li>Create a <strong>Software Instrument</strong> track</li>
+  <li>In the instrument slot load <strong>External Instrument</strong>, point it at your ADX1's MIDI port and channel 1</li>
+  <li>In the <strong>MIDI FX slot</strong> (above the instrument), insert <strong>ADX1 Sequencer</strong></li>
+  <li>Press Play in Logic</li>
+</ol>
+<div class="tip">You can also use the plugin's built-in MIDI OUT selector in Logic, same as Ableton — no External Instrument needed.</div>
+
+<h3>Other DAWs (Reaper, Bitwig, etc.)</h3>
+<p>Insert the VST3 on any MIDI track. Use the built-in <strong>MIDI OUT</strong> selector to send directly to the ADX1. The sequencer syncs to the host transport automatically.</p>
+</section>
+
+
+<!-- ── UI OVERVIEW ──────────────────────────────── -->
+<section>
+<h2>UI Overview</h2>
+
+<div class="ui">
+  <!-- Transport -->
+  <div class="ui-row">
+    <span style="font-size:9px;color:var(--mid);width:56px">TRANSPORT</span>
+    <span class="btn g">PLAY</span>
+    <span class="btn r">STOP</span>
+    <span class="slider"></span>
+    <span class="btn" style="width:46px;text-align:center">120</span>
+    <span class="btn">TAP</span>
+    <span class="btn" style="color:var(--purple)">SWING</span>
+    <span class="slider p"></span>
+  </div>
+  <!-- MIDI row -->
+  <div class="ui-row">
+    <span style="font-size:9px;color:var(--mid);width:56px">MIDI OUT</span>
+    <span class="btn">↻</span>
+    <span class="btn" style="color:var(--text)">ADX1 USB Interface</span>
+  </div>
+  <div class="hr"></div>
+  <!-- Pattern bar -->
+  <div class="ui-row">
+    <span style="font-size:9px;color:var(--mid)">BANK</span>
+    <span class="btn g">A</span><span class="btn">B</span><span class="btn">C</span><span class="btn">D</span>
+    &nbsp;
+    <span style="font-size:9px;color:var(--mid)">PAT</span>
+    <span class="btn a">1</span><span class="btn">2</span><span class="btn">3</span><span class="btn">4</span>
+    <span class="btn">5</span><span class="btn">6</span><span class="btn">7</span><span class="btn">8</span>
+    &nbsp;
+    <span class="btn r">CLEAR ALL</span>
+    <span class="btn a">RAND ALL</span>
+    <span class="btn">COPY</span><span class="btn">PASTE</span>
+    <span class="btn">UNDO</span><span class="btn">REDO</span>
+    <span class="btn">− 4 BARS +</span>
+    <span class="btn b">CHAIN</span>
+  </div>
+  <!-- Random row -->
+  <div class="ui-row">
+    <span style="font-size:9px;color:var(--mid);width:56px">RANDOM</span>
+    <span class="slider a" style="width:240px"></span>
+    <span style="font-size:9px;color:var(--amber);margin-left:8px">House / Hip-hop</span>
+  </div>
+  <div class="hr"></div>
+  <!-- Grid rows -->
+  <div class="gd">
+    <span class="lbl">Bass</span>
+    <span class="step on ph"></span><span class="step"></span><span class="step on"></span><span class="step"></span>
+    <span class="step alt"></span><span class="step alt on"></span><span class="step alt"></span><span class="step alt"></span>
+    <span class="step on"></span><span class="step"></span><span class="step"></span><span class="step on"></span>
+    <span class="step alt"></span><span class="step alt on"></span><span class="step alt"></span><span class="step alt"></span>
+  </div>
+  <div class="gd">
+    <span class="lbl">Snare CL</span>
+    <span class="step"></span><span class="step"></span><span class="step"></span><span class="step"></span>
+    <span class="step alt on"></span><span class="step alt"></span><span class="step alt"></span><span class="step alt"></span>
+    <span class="step"></span><span class="step"></span><span class="step"></span><span class="step"></span>
+    <span class="step alt on"></span><span class="step alt"></span><span class="step alt"></span><span class="step alt"></span>
+  </div>
+  <div class="gd">
+    <span class="lbl" style="opacity:.3">HiHat OP</span>
+    <span class="step mute"></span><span class="step on mute"></span><span class="step mute"></span><span class="step on mute"></span>
+    <span class="step alt mute"></span><span class="step alt on mute"></span><span class="step alt mute"></span><span class="step alt on mute"></span>
+    <span class="step mute"></span><span class="step on mute"></span><span class="step mute"></span><span class="step on mute"></span>
+    <span class="step alt mute"></span><span class="step alt on mute"></span><span class="step alt mute"></span><span class="step alt on mute"></span>
+  </div>
+</div>
+</section>
+
+
+<!-- ── TRANSPORT ─────────────────────────────────── -->
+<section>
+<h2>Transport &amp; BPM</h2>
+<ul>
+  <li><strong>PLAY / STOP</strong> — starts/stops the internal sequencer. When loaded in a DAW, the sequencer syncs to the host transport automatically and ignores the internal buttons.</li>
+  <li><strong>BPM slider &amp; display</strong> — drag or click to type. Range 20–300 BPM. Overridden by host tempo in a DAW.</li>
+  <li><strong>TAP</strong> — tap repeatedly to set BPM by feel. Averages the last few taps.</li>
+  <li><strong>SWING / slider</strong> — global swing that overrides all per-lane swing settings when active. Toggle on (purple) to enable.</li>
+</ul>
+</section>
+
+
+<!-- ── MIDI OUTPUT ───────────────────────────────── -->
+<section>
+<h2>MIDI Output</h2>
+<p>The <strong>MIDI OUT</strong> selector sends notes directly from the plugin to a CoreMIDI device — no DAW routing needed.</p>
+<ul>
+  <li>Click <strong>↻</strong> to refresh the connected device list</li>
+  <li>Select your ADX1's USB MIDI port from the dropdown</li>
+  <li>The selection is saved with the project and reconnects automatically</li>
+</ul>
+</section>
+
+
+<!-- ── GRID ─────────────────────────────────────── -->
+<section>
+<h2>Sequencer Grid</h2>
+
+<h3>Step editing</h3>
+<ul>
+  <li><strong>Left-click</strong> — toggle a step on/off (velocity 100 by default)</li>
+  <li><strong>Right-click</strong> — open the step popup: set <strong>subdivisions</strong> (1–4 hits per step) and <strong>probability</strong> (0–100%)</li>
+  <li><strong>Scroll wheel</strong> on an active step — adjust velocity (1–127)</li>
+  <li><strong>Alt + click</strong> on any step — set that lane's loop end to that step (polyrhythm length)</li>
+</ul>
+
+<h3>Microtiming</h3>
+<ul>
+  <li><strong>Shift + drag</strong> left/right on a step — adjust microtiming offset (±50% of a step)</li>
+  <li><strong>Shift + scroll</strong> on a step — snap through the microtiming preset values</li>
+  <li><strong>Shift + double-click</strong> — reset microtiming to 0</li>
+  <li>The thin bar at the very top of each step shows the current offset (amber = late, blue = early)</li>
+</ul>
+
+<h3>Subdivisions &amp; Probability (right-click popup)</h3>
+<ul>
+  <li><strong>1 2 3 4</strong> — split a step into that many evenly-spaced hits, each with its own velocity</li>
+  <li><strong>Probability slider</strong> — chance the step fires on any given pass (0–100%). Steps below 100% show an amber badge. An active step at 60% shows <code>60%</code> at the bottom of the cell.</li>
+</ul>
+
+<h3>Zoom</h3>
+<p>Use the <strong>−</strong> / <strong>+</strong> buttons below the pattern bar, or <strong>Cmd + scroll</strong>, or pinch on a trackpad. Range: 100–400%.</p>
+
+<h3>Bar separators</h3>
+<p>Bars alternate between lighter and darker backgrounds. A thin vertical line marks every bar boundary. The header row shows bar numbers.</p>
+</section>
+
+
+<!-- ── LANE CONTROLS ─────────────────────────────── -->
+<section>
+<h2>Lane Controls</h2>
+
+<h3>Lane length (polyrhythms)</h3>
+<p><strong>Alt + click</strong> any step to set that lane's loop length to end at that step. The amber bracket on the last active step shows where the loop ends. Lanes with different lengths loop independently — a 12-step bass against a 16-step hihat creates an evolving polyrhythm.</p>
+
+<h3>Swing (per lane)</h3>
+<p>Each lane has a swing slider in the label area. Odd-numbered steps are pushed later. Drag right to increase. The global SWING button overrides all per-lane swing when active.</p>
+
+<h3>Mute (M button)</h3>
+<ul>
+  <li>Click <strong>M</strong> on any lane to mute it — steps are silenced but remain visible at reduced opacity so you can see what would be playing</li>
+  <li>Click <strong>M</strong> in the header row above the mute column to <strong>mute all</strong> lanes at once — click again to unmute all</li>
+  <li>Mute state is per-pattern and saved with the project</li>
+</ul>
+
+<h3>Randomize (⚄ button)</h3>
+<ul>
+  <li><strong>Left-click ⚄</strong> — randomize this lane immediately using its config settings</li>
+  <li><strong>Right-click ⚄</strong> — open the randomize config panel: choose which parameters to randomize (steps, velocity, subdivisions, probability, microtiming, swing) and set density (0–100%)</li>
+</ul>
+
+<h3>Clear lane (× button)</h3>
+<p>Clears all steps on that lane. <strong>CLEAR ALL</strong> in the pattern bar clears all lanes and resets all per-lane swing to 0.</p>
+</section>
+
+
+<!-- ── PATTERN BANKS ─────────────────────────────── -->
+<section>
+<h2>Pattern Banks</h2>
+<p><strong>4 banks</strong> (A–D) × <strong>8 patterns</strong> = 32 patterns total, all saved with the project.</p>
+<ul>
+  <li>Click a bank button (A/B/C/D) then a pattern number (1–8) to switch patterns</li>
+  <li>Pattern switches happen at the <strong>next bar boundary</strong> — if you're on bar 2 of a 4-bar pattern, the switch happens when bar 3 would start</li>
+  <li>A pattern button glows <strong>purple</strong> while a switch is queued</li>
+  <li><strong>COPY / PASTE</strong> — duplicate the current pattern to any slot</li>
+</ul>
+</section>
+
+
+<!-- ── PATTERN LENGTH ─────────────────────────────── -->
+<section>
+<h2>Pattern Length</h2>
+<p>The <strong>− BARS +</strong> control sets the global pattern length (1–8 bars = 4–32 steps). The grid resizes automatically. Each lane's individual loop length still runs independently within this global length.</p>
+</section>
+
+
+<!-- ── RANDOM ─────────────────────────────────────── -->
+<section>
+<h2>Randomize All + Chaos</h2>
+
+<p>The <strong>RANDOM</strong> slider and <strong>RAND ALL</strong> button work together to generate full patterns in one click.</p>
+
+<ul>
+  <li>Set the <strong>RANDOM</strong> slider to choose the style</li>
+  <li>Click <strong>RAND ALL</strong> to instantly generate a new pattern at that style</li>
+</ul>
+
+<table>
+  <tr><th>Slider position</th><th>Style</th><th>Character</th></tr>
+  <tr><td>0–15%</td><td>House / Hip-hop</td><td>Kick on 1&amp;3, snare on 2&amp;4, straight 8th hihats, consistent velocities</td></tr>
+  <tr><td>15–35%</td><td>Trip-hop / Downtempo</td><td>Syncopation, off-beat hits, slight velocity variation</td></tr>
+  <tr><td>35–55%</td><td>IDM / Broken Beat</td><td>Irregular step placement, velocity range widens, occasional subdivisions</td></tr>
+  <tr><td>55–75%</td><td>Experimental / Glitch</td><td>Unpredictable placements, probability drops, microtiming, denser subs</td></tr>
+  <tr><td>75–100%</td><td>Chaos</td><td>Wild velocity swings, dense subs, heavy probability variation, maximum unpredictability</td></tr>
+</table>
+
+<p>Individual lane ⚄ buttons use that lane's own randomize config (set by right-clicking), independent of the RANDOM slider.</p>
+</section>
+
+
+<!-- ── PATTERN CHAIN ─────────────────────────────── -->
+<section>
+<h2>Pattern Chain</h2>
+<p>Chain mode plays patterns in a sequence automatically.</p>
+
+<div class="ui" style="margin:14px 0">
+  <div class="ui-row">
+    <span class="btn b">CHAIN ON</span>
+    <span style="color:var(--dim);margin:0 6px">→</span>
+    <span class="pill b cur">A1 ▶</span>
+    <span class="pill b">A2</span>
+    <span class="pill a">B1</span>
+    <span class="pill g">A3</span>
+    <span style="font-size:9px;color:var(--dim);margin-left:6px">← drag to reorder · right-click to remove · click to jump</span>
+  </div>
+</div>
+
+<ul>
+  <li>Click <strong>CHAIN</strong> to enable chain mode</li>
+  <li>Click pattern number buttons to <strong>append</strong> entries to the chain</li>
+  <li><strong>Drag</strong> pills left/right to reorder</li>
+  <li><strong>Right-click</strong> a pill to remove it</li>
+  <li><strong>Click</strong> a pill to jump to that pattern (queues at next bar boundary)</li>
+  <li>The active pill shows a <strong>progress bar</strong> along its bottom edge and a <strong>triangle arrow</strong> below it</li>
+  <li><strong>CLR</strong> clears the chain. Toggle CHAIN off to return to manual switching.</li>
+</ul>
+
+<div class="tip">Bank colours: A = green, B = blue, C = amber, D = purple.</div>
+</section>
+
+
+<!-- ── UNDO / REDO ────────────────────────────────── -->
+<section>
+<h2>Undo &amp; Redo</h2>
+<table>
+  <tr><th>Action</th><th>Result</th></tr>
+  <tr><td>Cmd + Z</td><td>Undo last edit (up to 50 levels)</td></tr>
+  <tr><td>Cmd + Shift + Z</td><td>Redo</td></tr>
+  <tr><td>UNDO button</td><td>Same as Cmd+Z — use this in Ableton where Cmd+Z is captured by the DAW</td></tr>
+  <tr><td>REDO button</td><td>Same as Cmd+Shift+Z</td></tr>
+</table>
+<p>Undo covers: step edits, velocity, swing, microtiming, lane length, subdivisions, probability, mute, randomize, clear, paste, and bar length changes — all per pattern.</p>
+</section>
+
+
+<!-- ── MIDI MAP ──────────────────────────────────── -->
+<section>
+<h2>MIDI Note Map</h2>
+<p>All notes are sent on <strong>MIDI channel 1</strong>.</p>
+<table>
+  <tr><th>Lane</th><th>Type</th><th>MIDI Note</th><th>Note Name</th></tr>
+  <tr><td>Bass</td><td>—</td><td>36</td><td>C2</td></tr>
+  <tr><td>Synth</td><td>—</td><td>41</td><td>F2</td></tr>
+  <tr><td>Snare</td><td>Closed (CL)</td><td>37</td><td>C♯2</td></tr>
+  <tr><td>Snare</td><td>Open (OP)</td><td>38</td><td>D2</td></tr>
+  <tr><td>HiHat</td><td>Closed (CL)</td><td>42</td><td>F♯2</td></tr>
+  <tr><td>HiHat</td><td>Open (OP)</td><td>46</td><td>A♯2</td></tr>
+  <tr><td>Metal</td><td>Closed (CL)</td><td>44</td><td>G♯2</td></tr>
+  <tr><td>Metal</td><td>Open (OP)</td><td>51</td><td>D♯3</td></tr>
+</table>
+</section>
+
+
+<!-- ── TIPS ─────────────────────────────────────── -->
+<section>
+<h2>Tips</h2>
+<ul>
+  <li><strong>Polyrhythms:</strong> Alt+click to set different lane lengths — Bass at 12, HiHat at 16, Metal at 10 creates a pattern that won't repeat for 60 steps.</li>
+  <li><strong>Fills:</strong> Copy a pattern, paste it to the next slot, add extra hits, chain them together for automatic fill drops.</li>
+  <li><strong>Variation without changing the pattern:</strong> Set key steps to 80% probability — every pass sounds slightly different.</li>
+  <li><strong>Live arrangement:</strong> Build a chain of 8 patterns for a full song structure, click pills during playback to jump sections.</li>
+  <li><strong>Swing feel:</strong> Enable Global Swing at 20–35% for a classic analogue drum machine shuffle. Per-lane swing lets you drag individual instruments independently.</li>
+  <li><strong>Microtiming:</strong> Shift+drag the snare slightly late (+10–15%) for a behind-the-beat pocket. Shift+drag the bass slightly early (−5%) to push the groove forward.</li>
+  <li><strong>Chaos starting points:</strong> Hit RAND ALL with chaos at 10% for an instant conventional groove, then nudge steps and velocities by hand.</li>
+  <li><strong>Mute soloing:</strong> Mute All (header M button), then unmute individual lanes to audition them in context. Muted lanes stay visible so you can reference what's there.</li>
+</ul>
+</section>
+
+</div>
+</body>
+</html>
